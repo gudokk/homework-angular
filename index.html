@@ -4,145 +4,212 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Главная</title>
+
+  <link rel="icon" type="svg" href="icons/favicon.svg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-  <header>
-    <div>
-      <nav>
-        <ul>
-          <li><a href="index.html" aria-current="page">Главная</a></li>
-          <li><a href="blog.html">Блог</a></li>
-        </ul>
-      </nav>
+<header class="header">
+  <div class="header-container">
+
+    <div class="Blog-name">
+      Машин-блог
     </div>
-  </header>
+
+    <nav>
+      <ul class="menu">
+        <li><a href="index.html" aria-current="page">Главная</a></li>
+        <li><a href="blog.html">Блог</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
 
   <main>
-    <section>
-      <h2>Обо мне</h2>
-      <div>
+    <section class="about">
+      
+      <div class="about-container">
+        
+        <div class="about-text">
+          <p class="about-intro">
+            Привет! Я Маша – разработчик на Angular
+          </p>
+
+          <p class="about-description">
+            На этой странице собраны краткая информация обо мне, опыт, навыки и примеры статей. Это базовый прототип персонального сайта.
+          </p>
+        </div>
+
         <img src="photo.jpg" alt="Моя фотография" width="200">
-        <div>
-          <p>Привет! Меня зовут Маша, а разработчик на angular, сейчас прохожу курсы от Элтеха</p>
-          <p>На этой странице собраны краткая информация обо мне, опыт, навыки и примеры статей. Это базовый прототип персонального сайта на чистом HTML с использованием семантических тегов.</p>
+      </div>
+    </section>
+
+    <section class="posts">
+      <div class="posts-container">
+
+        <article class="post-card">
+          <div class="post-content post-content--beige">
+            <span class="post-category post-category--orange">Product photography</span>
+            <h3>Paris secrets</h3>
+            <p>
+              Sint occaecat deserunt aliquip do occaecat ut quis.
+              Cupidatat magna fugiat quis sit duis est in volup
+            </p>
+          </div>
+
+          <div class="post-image"></div>
+        </article>
+
+        <article class="post-card">
+          <div class="post-content post-content--green">
+            <span class="post-category post-category--green">Portrait</span>
+            <h3>Oceanic feeling</h3>
+            <p>
+              Sint occaecat deserunt aliquip do occaecat ut quis.
+              Cupidatat magna fugiat quis sit duis est in volup
+            </p>
+          </div>
+
+          <div class="post-image"></div>
+        </article>
+
+        <div class="posts-button">
+          <a href="blog.html">Browse all posts</a>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="career">
+
+      <div class="skills">
+        <h1>Мои навыки</h1>
+
+        <div class="skills-grid">
+          <div class="skill">JavaScript / TypeScript</div>
+          <div class="skill">React / Angular</div>
+          <div class="skill">Creativity</div>
+
+          <div class="skill">HTML / CSS</div>
+          <div class="skill">Git / Docker</div>
+          <div class="skill">Team working</div>
         </div>
       </div>
-    </section>
 
-    <section>
-      <h2>Моя карьера</h2>
-      
-      <div>
-          <h4>Текущая должность</h4>
-          <p>В настоящее время профессионально прогуливаю пары в магистратуре.</p>
+      <div class="work">
+        <div class="work-left">
+          <h1>Мои работы</h1>
+          <p>
+            Професионально сочиняю в резюме.
+          </p>
+        </div>
+
+        <div class="work-right">
+
+          <div class="job">
+            <div class="job-icon"></div>
+            <div>
+              <span class="job-date">2023 – 2024</span>
+              <h4>Преподаватель математики</h4>
+              <p>Подготовка школьников к олимпиадам</p>
+            </div>
+          </div>
+
+          <div class="job">
+            <div class="job-icon"></div>
+            <div>
+              <span class="job-date">2025</span>
+              <h4>Frontend стажер (React)</h4>
+              <p>Разработка страниц сайта</p>
+            </div>
+          </div>
+
+          <div class="job">
+            <div class="job-icon"></div>
+            <div>
+              <span class="job-date">2025 – 2026</span>
+              <h4>Frontend (Angular)</h4>
+              <p>Доработка корпоративного сайта</p>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <h4>Опыт работы:</h4>
-      <ul>
-        <li>
-          <p><strong>Преподаватель математического центра на базе НГТУ (2023 – 2024)</strong></p>
-          <p>Занималась со школьниками олимпиадной математикой</p>
-        </li>
-        <li>
-          <p><strong>Стажер фронтенд разработчик, NIL IT (2025)</strong></p>
-          <p>Создание страниц сайта на React</p>
-        </li>
-        <li>
-          <p><strong>Стажер фронтенд разработчик на Angular, Ингосстрах (2025 – 2026)</strong></p>
-          <p>Доработка сайта компании</p>
-        </li>
-      </ul>
+      <div class="hobby">
 
-      <h4>Образование:</h4>
-      <div>
-        <p><strong>Новосибирский государственный технический университет, 2021 – 2025</strong></p>
-        <p>Бакалавриат по специальности "Прикладная математика и информатика"</p>
-        <p>Выпускная работа: "Разработка веб-портала о горных лыжах"</p>
+        <div class="hobby-header">
+          <h1>Хобби</h1>
+          <p>
+            Учебные и личные проекты, в которых я развиваю навыки дизайна,
+            верстки и работы с интерфейсами.
+          </p>
+        </div>
+
+        <div class="hobby-content">
+          <div class="hobby-left">
+            <div class="hobby-grid">
+              <div class="hobby-item">
+                <img src="https://picsum.photos/300/400" alt="">
+
+                <div class="hobby-overlay">
+                  <h4>Hobby project name</h4>
+                  <p>
+                    Duis nisi do exercitation in irure aliqua commodo nisi eu id
+                    reprehenderit dolore fugiat consectetur irure labore est ea.
+                  </p>
+                </div>
+              </div>
+              <img src="https://picsum.photos/301/400" alt="">
+            </div>
+          </div>
+
+          <div class="hobby-right">
+            <div class="hobby-placeholder"></div>
+            <div class="hobby-placeholder"></div>
+          </div>
+        </div>
+
       </div>
-
-      <h4>Курсы и сертификации:</h4>
-      <ul>
-        <li>
-            Advanced React Development — Coursera (2023)
-        </li>
-        <li>
-            UX/UI Design Fundamentals — Skillbox (2021)
-        </li>
-        <li>
-            Web Performance Optimization — Frontend Masters (2022)
-        </li>
-        <li>
-            Google Analytics Certification (2020)
-        </li>
-      </ul>
-
-      <h4>Навыки:</h4>
-      <ul>
-        <li>
-            Программирование: JavaScript, TypeScript, React, Angular, HTML5, CSS3, Node.js
-        </li>
-        <li>
-            Инструменты: Git, Docker, Figma, VS Code
-        </li>
-        <li>
-            Методологии: Agile, Scrum, Test-Driven Development
-        </li>
-      </ul>
-
-      <h4>Достижения:</h4>
-      <ul>
-        <li>
-            Закончила университет с красным дипломом
-        </li>
-        <li>
-            Попала на курсы от Элтеха
-        </li>
-        <li>
-            Нашла на улице собаку теперь она живет со мной
-        </li>
-      </ul>
-      
-    </section>
-
-    <section>
-      <h2>Последние статьи</h2>
-      <ul>
-        <li>
-          <article>
-            <h3>Как создать адаптивный дизайн за 30 минут</h3>
-            <p>Опубликовано: <time datetime="2024-12-15">15 декабря 2024</time></p>
-            <p>Небольшой обзор принципов адаптивной верстки: как использовать гибкие блоки, относительные единицы и медиа-запросы для комфортного отображения контента.</p>
-          </article>
-        </li>
-        <li>
-          <article>
-            <h3>Почему семантические теги делают сайт лучше</h3>
-            <p>Опубликовано: <time datetime="2024-11-28">28 ноября 2024</time></p>
-            <p>Разбираем, как теги header, main, section, article и footer помогают выстроить понятную структуру документа и улучшают читаемость кода.</p>
-          </article>
-        </li>
-        <li>
-          <article>
-            <h3>С чего начать изучение чистого HTML и CSS</h3>
-            <p>Опубликовано: <time datetime="2024-10-10">10 октября 2024</time></p>
-            <p>Простой маршрут для новичка: базовые теги, работа с текстом, списками, ссылками, формами и первые шаги в оформлении страниц.</p>
-          </article>
-        </li>
-      </ul>
-      <a class="button-link" href="blog.html">Посмотреть все статьи</a>
     </section>
   </main>
 
-  <footer>
-    <div>
-      <h2>Контакты</h2>
-      <p>Email: <a href="mailto:alex@creativeblog.ru">alex@creativeblog.ru</a></p>
-      <p>Телефон: <a href="tel:+79991234567">+7 (999) 123-45-67</a></p>
+  <footer id="contacts" class="footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <h1 class="footer-title">Пришлите мне оффер пожалуйста</h1>
+        <p>Email: <a href="mailto:alex@creativeblog.ru">alex@creativeblog.ru</a></p>
+        <p>Телефон: <a href="tel:+79991234567">+7 (999) 123-45-67</a></p>
+      </div>
+      
+      <div class="footer-right">
+        <form class="contact-form">
+          <label>Email</label>
+          <input 
+          type="email" 
+          placeholder="Your email"
+          required
+          >
+          <label>Input your message</label>
+          <textarea 
+          placeholder="Input your message"
+          rows="4"
+        ></textarea>
+          <button type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
+
     </div>
-    <div>
-        <h3>Социальные сети:</h3>
-        <p>Instagram | Twitter | LinkedIn | GitHub</p>
-    </div>
-  </footer>
+</footer>
+
 </body>
 </html>
