@@ -498,6 +498,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   gap: 30px;
   margin-bottom: 40px;
+  position: relative;
 }
 
 .blog-featured-content {
@@ -526,8 +527,47 @@ h1, h2, h3, h4, h5, h6 {
   gap: 30px;
 }
 
+.blog-empty {
+  width: 100%;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 18px;
+  display: none;
+}
+
+.post-delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(50, 55, 71, 0.85);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+  z-index: 2;
+}
+
+.blog-card:hover .post-delete-button,
+.blog-featured:hover .post-delete-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.post-delete-button:hover {
+  background: #000;
+}
+
 .blog-card {
   width: calc(33.333% - 20px);
+  position: relative;
 }
 
 .blog-card h4 {
@@ -580,6 +620,7 @@ h1, h2, h3, h4, h5, h6 {
 
   .blog-featured {
     flex-direction: column;
+
   }
 
   .blog-card {
