@@ -1,3 +1,5 @@
+const STORAGE_KEY = 'blog-posts';
+
 const formSection = document.getElementById('blog-form-section');
 const openFormButton = document.getElementById('open-post-form');
 const cancelFormButton = document.getElementById('cancel-post-form');
@@ -28,18 +30,32 @@ function resetAndHideForm() {
   hideForm();
 }
 
+function formatCurrentDate() {
+  const now = new Date();
+
+  return now.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function getPostsFromStorage() {
+  const posts = localStorage.getItem(STORAGE_KEY);
+
+  return posts ? JSON.parse(posts) : [];
+}
+
+function savePostsToStorage(posts) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+}
+
 function getPostsCount() {
   return document.querySelectorAll('.post-item').length;
 }
 
 function toggleEmptyState() {
-  const postsCount = getPostsCount();
-
-  if (postsCount === 0) {
-    emptyMessage.style.display = 'block';
-  } else {
-    emptyMessage.style.display = 'none';
-  }
+  emptyMessage.style.display = getPostsCount() === 0 ? 'block' : 'none';
 }
 
 function updatePostsCount() {
@@ -55,28 +71,37 @@ function closeStatsDialog() {
   statsDialog.close();
 }
 
-function formatCurrentDate() {
-  const now = new Date();
-
-  return now.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
-function createPostMarkup(title, text) {
+function createPostMarkup(post) {
   return `
-    <article class="blog-card post-item">
-      <button class="post-delete-button" type="button" aria-label="Удалить статью" title="Удалить статью">
+    <article class="blog-card post-item" data-id="${post.id}">
+      <button
+        class="post-delete-button"
+        type="button"
+        aria-label="Удалить статью"
+        title="Удалить статью"
+      >
         ×
       </button>
+
       <div class="blog-image small"></div>
-      <h4>${title}</h4>
-      <p class="blog-card-text">${text}</p>
-      <span class="blog-date">${formatCurrentDate()}</span>
+      <h4>${post.title}</h4>
+      <p class="blog-card-text">${post.text}</p>
+      <span class="blog-date">${post.date}</span>
     </article>
   `;
+}
+
+function renderPosts() {
+  const posts = getPostsFromStorage();
+
+  document.querySelectorAll('.post-item').forEach(post => post.remove());
+
+  posts.forEach(post => {
+    blogGrid.insertAdjacentHTML('beforeend', createPostMarkup(post));
+  });
+
+  toggleEmptyState();
+  updatePostsCount();
 }
 
 function addPostFromForm() {
@@ -87,23 +112,36 @@ function addPostFromForm() {
     return;
   }
 
-  const newPost = createPostMarkup(title, text);
-  blogGrid.insertAdjacentHTML('afterbegin', newPost);
+  const posts = getPostsFromStorage();
 
-  updatePostsCount();
-  toggleEmptyState();
+  const newPost = {
+    id: Date.now().toString(),
+    title,
+    text,
+    date: formatCurrentDate(),
+  };
+
+  posts.unshift(newPost);
+  savePostsToStorage(posts);
+
+  renderPosts();
 }
 
 function deletePost(targetButton) {
-  const post = targetButton.closest('.post-item');
+  const postElement = targetButton.closest('.post-item');
 
-  if (!post) {
+  if (!postElement) {
     return;
   }
 
-  post.remove();
-  updatePostsCount();
-  toggleEmptyState();
+  const postId = postElement.dataset.id;
+
+  const updatedPosts = getPostsFromStorage().filter(
+    post => post.id !== postId
+  );
+
+  savePostsToStorage(updatedPosts);
+  renderPosts();
 }
 
 openFormButton.addEventListener('click', showForm);
@@ -115,7 +153,7 @@ cancelFormButton.addEventListener('click', () => {
 openStatsButton.addEventListener('click', openStatsDialog);
 closeStatsButton.addEventListener('click', closeStatsDialog);
 
-statsDialog.addEventListener('click', (event) => {
+statsDialog.addEventListener('click', event => {
   const rect = statsDialog.getBoundingClientRect();
 
   const isOutside =
@@ -129,7 +167,7 @@ statsDialog.addEventListener('click', (event) => {
   }
 });
 
-blogForm.addEventListener('submit', (event) => {
+blogForm.addEventListener('submit', event => {
   event.preventDefault();
 
   addPostFromForm();
@@ -137,7 +175,7 @@ blogForm.addEventListener('submit', (event) => {
   hideForm();
 });
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', event => {
   const deleteButton = event.target.closest('.post-delete-button');
 
   if (!deleteButton) {
@@ -147,5 +185,4 @@ document.addEventListener('click', (event) => {
   deletePost(deleteButton);
 });
 
-updatePostsCount();
-toggleEmptyState();
+renderPosts();
