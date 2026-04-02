@@ -15,6 +15,8 @@ const blogGrid = document.getElementById('blog-grid');
 const titleInput = document.getElementById('post-title');
 const textInput = document.getElementById('post-text');
 
+const blogLoader = document.getElementById('blog-loader');
+
 function showForm() {
   formSection.classList.add('is-open');
   formSection.setAttribute('aria-hidden', 'false');
@@ -71,6 +73,24 @@ function closeStatsDialog() {
   statsDialog.close();
 }
 
+function setFormDisabled(isDisabled) {
+  openFormButton.disabled = isDisabled;
+  cancelFormButton.disabled = isDisabled;
+
+  titleInput.disabled = isDisabled;
+  textInput.disabled = isDisabled;
+
+  blogForm.querySelector('[type="submit"]').disabled = isDisabled;
+}
+
+function showLoader() {
+  blogLoader.hidden = false;
+}
+
+function hideLoader() {
+  blogLoader.hidden = true;
+}
+
 function createPostMarkup(post) {
   return `
     <article class="blog-card post-item" data-id="${post.id}">
@@ -91,7 +111,14 @@ function createPostMarkup(post) {
   `;
 }
 
-function renderPosts() {
+async function renderPosts(withDelay = true) {
+  if (withDelay) {
+    showLoader();
+    setFormDisabled(true);
+
+    await new Promise(resolve => setTimeout(resolve, 1200));
+  }
+
   const posts = getPostsFromStorage();
 
   document.querySelectorAll('.post-item').forEach(post => post.remove());
@@ -102,15 +129,20 @@ function renderPosts() {
 
   toggleEmptyState();
   updatePostsCount();
+
+  hideLoader();
+  setFormDisabled(false);
 }
 
-function addPostFromForm() {
+async function addPostFromForm() {
   const title = titleInput.value.trim();
   const text = textInput.value.trim();
 
   if (!title || !text) {
     return;
   }
+
+  setFormDisabled(true);
 
   const posts = getPostsFromStorage();
 
@@ -124,7 +156,7 @@ function addPostFromForm() {
   posts.unshift(newPost);
   savePostsToStorage(posts);
 
-  renderPosts();
+  await renderPosts(true);
 }
 
 function deletePost(targetButton) {
@@ -167,10 +199,11 @@ statsDialog.addEventListener('click', event => {
   }
 });
 
-blogForm.addEventListener('submit', event => {
+blogForm.addEventListener('submit', async event => {
   event.preventDefault();
 
-  addPostFromForm();
+  await addPostFromForm();
+
   blogForm.reset();
   hideForm();
 });
@@ -185,4 +218,4 @@ document.addEventListener('click', event => {
   deletePost(deleteButton);
 });
 
-renderPosts();
+renderPosts(true);
