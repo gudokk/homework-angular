@@ -1,122 +1,25 @@
 <section class="blog">
-      <div class="blog-container">
+  <div class="blog-container">
+    <div class="blog-header">
+      <div>
+        <h2>Мой блог</h2>
+        <p class="blog-description">
+          Что то на латыне тут должно быть.
+        </p>
+      </div>
 
-        <div class="blog-header">
-          <div>
-            <h2>Мой блог</h2>
-            <p class="blog-description">
-              Что то на латыне тут должно быть.
-            </p>
-          </div>
-
-          <div class="blog-circle">
-            <span>МОЙ БЛОГ МОЙ БЛОГ МОЙ БЛОГ</span>
-          </div>
-        </div>
-        <div class="blog-grid" id="blog-grid">
-          <div class="blog-empty" id="blog-empty">
-            Пока нет статей
-          </div>
-
-          <div class="blog-loader" id="blog-loader" hidden>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        <div class="blog-button">
-          <button>Next →</button>
-        </div>
-
-
-    <div class="blog-admin-layout">
-      <aside class="blog-admin-panel">
-        <button
-          class="blog-admin-icon-button"
-          id="open-post-form"
-          type="button"
-          title="Создать статью"
-        >
-          <img src="icons/Vector.svg" alt="">
-        </button>
-
-        <button
-          class="blog-admin-icon-button"
-          id="open-stats"
-          type="button"
-          title="Показать статистику"
-        >
-          <img src="icons/stats.svg" alt="">
-        </button>
-      </aside>
-
-      <div class="blog-admin-content">
-        <section
-          class="blog-form-section"
-          id="blog-form-section"
-          aria-hidden="true"
-        >
-          <div class="blog-form-card">
-            <h3 class="blog-form-title">Добавить статью</h3>
-
-            <form class="blog-form" id="blog-form">
-              <div class="blog-form-group">
-                <label for="post-title">Заголовок</label>
-                <input
-                  id="post-title"
-                  name="title"
-                  type="text"
-                  placeholder="Заголовок статьи"
-                  required
-                >
-              </div>
-
-              <div class="blog-form-group">
-                <label for="post-text">Текст статьи</label>
-                <textarea
-                  id="post-text"
-                  name="text"
-                  placeholder="Текст статьи"
-                  rows="7"
-                  required
-                ></textarea>
-              </div>
-
-              <div class="blog-form-actions">
-                <button class="blog-form-button blog-form-button--save" type="submit">
-                  Сохранить
-                </button>
-                <button
-                  class="blog-form-button blog-form-button--cancel"
-                  id="cancel-post-form"
-                  type="button"
-                >
-                  Отмена
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
+      <div class="blog-circle">
+        <span>МОЙ БЛОГ МОЙ БЛОГ МОЙ БЛОГ</span>
       </div>
     </div>
 
-    <dialog class="stats-dialog" id="stats-dialog">
-      <div class="stats-dialog__content">
-        <button
-          class="stats-dialog__close"
-          id="close-stats"
-          type="button"
-          aria-label="Закрыть статистику"
-        >
-          ×
-        </button>
+    <app-blog-list [posts]="posts" (deletePost)="onDeletePost($event)">
+    </app-blog-list>
 
-        <h3 class="stats-dialog__title">Статистика страницы</h3>
-        <p class="stats-dialog__text">
-          Количество постов на странице:
-        </p>
-        <p class="stats-dialog__count" id="posts-count">0</p>
-      </div>
-    </dialog>
-      </div>
-    </section>
+    <div class="blog-button">
+      <button>Next →</button>
+    </div>
+
+    <app-admin-panel [postsCount]="posts.length" (addPost)="onAddPost($event)"></app-admin-panel>
+  </div>
+</section>

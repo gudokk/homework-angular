@@ -1,0 +1,89 @@
+<div class="blog-admin-layout">
+  <aside class="blog-admin-panel">
+    <button
+      (click)="isPostFormOpen = true"
+      class="blog-admin-icon-button"
+      type="button"
+      title="Создать статью"
+    >
+      <img src="assets/Vector.svg" alt="">
+    </button>
+
+    <button
+      (click)="isStatsOpen = true"
+      class="blog-admin-icon-button"
+      type="button"
+      title="Показать статистику"
+    >
+      <img src="assets/stats.svg" alt="">
+    </button>
+  </aside>
+
+  @if (isPostFormOpen) {
+    <div class="blog-admin-content">
+      <section class="blog-form-section">
+        <div class="blog-form-card">
+          <h3 class="blog-form-title">Добавить статью</h3>
+
+          <form class="blog-form" (ngSubmit)="savePost()">
+            <div class="blog-form-group">
+              <label>
+                Заголовок
+                <input
+                  type="text"
+                  name="title"
+                  [(ngModel)]="title"
+                >
+              </label>
+            </div>
+
+            <div class="blog-form-group">
+              <label>
+                Текст
+                <textarea
+                  name="text"
+                  [(ngModel)]="text"
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="blog-form-actions">
+              <button class="blog-form-button blog-form-button--save" type="submit">
+                Сохранить
+              </button>
+
+              <button
+                class="blog-form-button blog-form-button--cancel"
+                type="button"
+                (click)="isPostFormOpen = false"
+              >
+                Отмена
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  }
+
+  @if (isStatsOpen) {
+    <div class="stats-popup">
+      <div class="stats-popup__content">
+        <button
+          class="stats-dialog__close"
+          type="button"
+          (click)="isStatsOpen = false"
+          aria-label="Закрыть статистику"
+        >
+          ×
+        </button>
+
+        <h3 class="stats-dialog__title">Статистика страницы</h3>
+        <p class="stats-dialog__text">
+          Количество постов на странице:
+        </p>
+        <p class="stats-dialog__count">{{ postsCount }}</p>
+      </div>
+    </div>
+  }
+</div>

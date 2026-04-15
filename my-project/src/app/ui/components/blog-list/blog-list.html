@@ -1,0 +1,23 @@
+<div class="blog-grid">
+
+  @for (post of posts; track post.id) {
+    <article class="blog-card post-item">
+      <div class="blog-image small"></div>
+      <h4>{{ post.title }}</h4>
+      <p>{{ post.text }}</p>
+
+        <button
+        type="button"
+        class="post-delete-button"
+        (click)="removePost(post.id)"
+        >
+        ×
+        </button>
+    </article>
+  } @empty {
+    <div class="blog-empty">
+      Пока нет статей
+    </div>
+  }
+
+</div>
