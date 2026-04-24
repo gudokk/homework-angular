@@ -13,13 +13,34 @@
       </div>
     </div>
 
-    <app-blog-list [posts]="posts" (deletePost)="onDeletePost($event)">
-    </app-blog-list>
+    <app-blog-list
+      [posts]="posts"
+      (deletePost)="onDeletePost($event)"
+      (editPost)="openEditForm($event)"
+    ></app-blog-list>
 
     <div class="blog-button">
       <button>Next →</button>
     </div>
 
-    <app-admin-panel [postsCount]="posts.length" (addPost)="onAddPost($event)"></app-admin-panel>
+    <app-admin-panel
+      (addPostClick)="openCreateForm()"
+      (statsClick)="isStatsOpen = true"
+    ></app-admin-panel>
+
+    <app-blog-post-form
+      *ngIf="isFormOpen"
+      [post]="editingPost"
+      [mode]="formMode"
+      (save)="onSavePost($event)"
+      (cancel)="closePostForm()"
+    ></app-blog-post-form>
+
+    <app-blog-stats-dialog
+      *ngIf="isStatsOpen"
+      [postsCount]="posts.length"
+      (close)="isStatsOpen = false"
+    ></app-blog-stats-dialog>
+
   </div>
 </section>

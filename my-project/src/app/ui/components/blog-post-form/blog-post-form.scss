@@ -1,0 +1,123 @@
+.blog-post-content {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.blog-form-section {
+  width: 100%;
+}
+
+.blog-form-card {
+  max-width: 800px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.blog-form-title {
+  margin: 0 0 24px;
+  font-size: var(--h3-size);
+  font-weight: 700;
+}
+
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.blog-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blog-form-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: var(--text-size);
+  font-weight: 400;
+}
+
+.blog-form-group input,
+.blog-form-group textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #b8becd;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: var(--text-size);
+  color: var(--text-main);
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.blog-form-group textarea {
+  resize: vertical;
+  min-height: 160px;
+}
+
+.blog-form-group input:focus,
+.blog-form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(97, 193, 92, 0.12);
+}
+
+.blog-form-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.blog-form-button {
+  min-width: 180px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: var(--text-size);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.blog-form-button--save {
+  border: none;
+  background: var(--accent-green);
+  color: var(--text-footer);
+}
+
+.blog-form-button--save:hover {
+  opacity: 0.9;
+}
+
+.blog-form-button--cancel {
+  border: 1px solid var(--accent-green);
+  background: transparent;
+  color: var(--accent-green);
+}
+
+.blog-form-button--cancel:hover {
+  background: var(--accent-green-light);
+}
+
+.blog-form-error {
+  color: #d93025;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.blog-form-field--invalid {
+  border-color: #d93025;
+}
+
+.blog-form-field--invalid:focus {
+  border-color: #d93025;
+  box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12);
+}
+
+.blog-form-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
