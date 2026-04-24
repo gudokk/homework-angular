@@ -43,7 +43,9 @@
 }
 
 .blog-card:hover .post-delete-button,
-.blog-featured:hover .post-delete-button {
+.blog-featured:hover .post-delete-button,
+.blog-card:hover .post-edit-button,
+.blog-featured:hover .post-edit-button {
   opacity: 1;
   visibility: visible;
 }
@@ -60,4 +62,26 @@
 .blog-card h4 {
   margin-top: 10px;
   font-size:var(--text-size);
+}
+
+.post-edit-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+  z-index: 2;
+}
+
+.post-edit-button img {
+  width: 20px;
+  height: 20px;
 }

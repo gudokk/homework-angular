@@ -5,7 +5,7 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a routerLink="/" routerLinkActive="active">Главная</a></li>
+                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Главная</a></li>
                 <li><a routerLink="/blog" routerLinkActive="active">Блог</a></li>
                 <li><a href="#contacts">Контакты</a></li>
             </ul>

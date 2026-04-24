@@ -1,0 +1,69 @@
+<div class="blog-post-content">
+  <section class="blog-form-section">
+    <div class="blog-form-card">
+      <h3 class="blog-form-title">
+        {{ isEditMode ? 'Изменить статью' : 'Добавить статью' }}
+      </h3>
+
+      <form class="blog-form" [formGroup]="postForm" (ngSubmit)="onSave()">
+        <div class="blog-form-group">
+          <label>
+            Заголовок
+            <input
+              type="text"
+              formControlName="title"
+              [class.blog-form-field--invalid]="isInvalid(titleControl)"
+            >
+          </label>
+
+          @if (isInvalid(titleControl)) {
+            <div class="blog-form-error">
+              @if (titleControl.errors?.['required']) {
+                <span>Название статьи обязательно</span>
+              }
+              @if (titleControl.errors?.['minlength']) {
+                <span>Минимальная длина названия — 25 символов</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="blog-form-group">
+          <label>
+            Текст
+            <textarea
+              formControlName="text"
+              [class.blog-form-field--invalid]="isInvalid(textControl)"
+            ></textarea>
+          </label>
+
+          @if (isInvalid(textControl)) {
+            <div class="blog-form-error">
+              @if (textControl.errors?.['required']) {
+                <span>Текст статьи обязателен</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="blog-form-actions">
+          <button
+            class="blog-form-button blog-form-button--save"
+            type="submit"
+            [disabled]="postForm.invalid"
+          >
+            {{ isEditMode ? 'Сохранить' : 'Добавить' }}
+          </button>
+
+          <button
+            class="blog-form-button blog-form-button--cancel"
+            type="button"
+            (click)="onCancel()"
+          >
+            Отмена
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

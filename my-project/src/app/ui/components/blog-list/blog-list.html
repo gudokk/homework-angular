@@ -13,6 +13,13 @@
         >
         ×
         </button>
+        <button
+        type="button"
+        class="post-edit-button"
+        (click)="onEditPost(post)"
+        >
+        <img src="assets/edit.png" alt="Редактировать">
+        </button>
     </article>
   } @empty {
     <div class="blog-empty">

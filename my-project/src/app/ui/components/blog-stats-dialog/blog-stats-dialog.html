@@ -1,0 +1,18 @@
+    <div class="stats-popup">
+      <div class="stats-popup__content">
+        <button
+          class="stats-dialog__close"
+          type="button"
+          (click)="onClose()"
+          aria-label="Закрыть статистику"
+        >
+          ×
+        </button>
+
+        <h3 class="stats-dialog__title">Статистика страницы</h3>
+        <p class="stats-dialog__text">
+          Количество постов на странице:
+        </p>
+        <p class="stats-dialog__count">{{ postsCount }}</p>
+      </div>
+    </div>
