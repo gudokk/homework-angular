@@ -1,0 +1,21 @@
+<div class="work">
+  <div class="work-left">
+    <h1>Мои работы</h1>
+    <p>
+      Професионально сочиняю в резюме.
+    </p>
+  </div>
+
+  <div class="work-right">
+    @for (job of jobs; track job.title) {
+      <div class="job">
+        <div class="job-icon"></div>
+        <div>
+          <span class="job-date">{{ job.date }}</span>
+          <h4>{{ job.title }}</h4>
+          <p>{{ job.description }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

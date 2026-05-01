@@ -1,13 +1,19 @@
 import {
   Component,
+  computed,
+  effect,
   EventEmitter,
-  Input,
-  OnChanges,
   Output,
-  SimpleChanges,
+  input,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewPost, Post } from '../../../dto/post';
+import { FormMode } from '../../../dto/form-mode';
+
+type MinLengthValidationInfo = {
+  requiredLength: number;
+  actualLength: number;
+};
 
 @Component({
   selector: 'app-blog-post-form',
@@ -16,9 +22,9 @@ import { NewPost, Post } from '../../../dto/post';
   templateUrl: './blog-post-form.html',
   styleUrl: './blog-post-form.scss',
 })
-export class BlogPostForm implements OnChanges {
-  @Input() public post: Post | null = null;
-  @Input() public mode: 'add' | 'edit' = 'add';
+export class BlogPostForm {
+  public post = input<Post | null>(null);
+  public mode = input<FormMode>('add');
   @Output() public save = new EventEmitter<NewPost>();
   @Output() public cancel = new EventEmitter<void>();
 
@@ -33,25 +39,19 @@ export class BlogPostForm implements OnChanges {
       title: ['', [Validators.required, Validators.minLength(25)]],
       text: ['', [Validators.required]],
     });
-  }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['post'] || changes['mode']) {
+    effect(() => {
+      this.post();
+      this.mode();
       this.fillForm();
-    }
+    });
   }
 
-  protected get isEditMode(): boolean {
-    return this.mode === 'edit';
-  }
+  protected isEditMode = computed<boolean>(() => this.mode() === 'edit');
 
-  protected get titleControl(): FormControl<string> {
-    return this.postForm.controls.title;
-  }
+  protected formTitle = computed<string>(() => this.isEditMode() ? 'Изменить статью' : 'Добавить статью');
 
-  protected get textControl(): FormControl<string> {
-    return this.postForm.controls.text;
-  }
+  protected saveButtonTitle = computed<string>(() => this.isEditMode() ? 'Сохранить' : 'Добавить');
 
   protected onSave(): void {
     this.isSubmitted = true;
@@ -75,12 +75,52 @@ export class BlogPostForm implements OnChanges {
   private fillForm(): void {
     this.isSubmitted = false;
     this.postForm.reset({
-      title: this.post?.title ?? '',
-      text: this.post?.text ?? '',
+      title: this.post()?.title ?? '',
+      text: this.post()?.text ?? '',
     });
   }
 
-  protected isInvalid(control: FormControl<string>): boolean {
-    return control.invalid && (control.touched || this.isSubmitted);
+  protected hasError(controlName: string): boolean {
+    const control = this.postForm.get(controlName);
+    const isInvalid = control?.invalid && (control.touched || this.isSubmitted);
+
+    return Boolean(isInvalid);
+  }
+
+  protected getControlErrors(controlName: string): string[] {
+    const control = this.postForm.get(controlName);
+    const errors: Record<string, unknown> | null = control?.errors ?? null;
+
+    if (!errors) {
+      return [];
+    }
+
+    return Object.entries(errors).map(([errorKey, errorValue]) => this.getErrorStr(controlName, errorKey, errorValue));
+  }
+
+  private getErrorStr(controlName: string, errorCode: string, errorData: unknown): string {
+    if (controlName === 'title') {
+      switch (errorCode) {
+        case 'required':
+          return 'Название статьи обязательно';
+        case 'minlength': {
+          const { requiredLength, actualLength } = errorData as MinLengthValidationInfo;
+          return `Нужно еще ${requiredLength - actualLength} символов`;
+        }
+        default:
+          return 'Ошибка при заполнении заголовка';
+      }
+    }
+
+    if (controlName === 'text') {
+      switch (errorCode) {
+        case 'required':
+          return 'Текст статьи обязателен';
+        default:
+          return 'Ошибка при заполнении текста';
+      }
+    }
+
+    return 'Ошибка при заполнении поля';
   }
 }

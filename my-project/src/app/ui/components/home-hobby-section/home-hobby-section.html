@@ -1,0 +1,35 @@
+<div class="hobby">
+  <div class="hobby-header">
+    <h1>Хобби</h1>
+    <p>
+      Учебные и личные проекты, в которых я развиваю навыки дизайна,
+      верстки и работы с интерфейсами.
+    </p>
+  </div>
+
+  <div class="hobby-content">
+    <div class="hobby-left">
+      <div class="hobby-grid">
+        <div class="hobby-item">
+          <img [src]="hobbyImages[0]" alt="">
+
+          <div class="hobby-overlay">
+            <h4>Hobby project name</h4>
+            <p>
+              Duis nisi do exercitation in irure aliqua commodo nisi eu id
+              reprehenderit dolore fugiat consectetur irure labore est ea.
+            </p>
+          </div>
+        </div>
+
+        <img [src]="hobbyImages[1]" alt="">
+      </div>
+    </div>
+
+    <div class="hobby-right">
+      @for (_placeholder of rightPlaceholders; track $index) {
+        <div class="hobby-placeholder"></div>
+      }
+    </div>
+  </div>
+</div>

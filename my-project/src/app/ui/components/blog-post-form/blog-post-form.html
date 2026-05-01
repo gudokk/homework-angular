@@ -2,7 +2,7 @@
   <section class="blog-form-section">
     <div class="blog-form-card">
       <h3 class="blog-form-title">
-        {{ isEditMode ? 'Изменить статью' : 'Добавить статью' }}
+        {{ formTitle() }}
       </h3>
 
       <form class="blog-form" [formGroup]="postForm" (ngSubmit)="onSave()">
@@ -12,17 +12,14 @@
             <input
               type="text"
               formControlName="title"
-              [class.blog-form-field--invalid]="isInvalid(titleControl)"
+              [class.blog-form-field--invalid]="hasError('title')"
             >
           </label>
 
-          @if (isInvalid(titleControl)) {
+          @if (hasError('title')) {
             <div class="blog-form-error">
-              @if (titleControl.errors?.['required']) {
-                <span>Название статьи обязательно</span>
-              }
-              @if (titleControl.errors?.['minlength']) {
-                <span>Минимальная длина названия — 25 символов</span>
+              @for (errorMsg of getControlErrors('title'); track $index) {
+                <span>{{ errorMsg }}</span>
               }
             </div>
           }
@@ -33,14 +30,14 @@
             Текст
             <textarea
               formControlName="text"
-              [class.blog-form-field--invalid]="isInvalid(textControl)"
+              [class.blog-form-field--invalid]="hasError('text')"
             ></textarea>
           </label>
 
-          @if (isInvalid(textControl)) {
+          @if (hasError('text')) {
             <div class="blog-form-error">
-              @if (textControl.errors?.['required']) {
-                <span>Текст статьи обязателен</span>
+              @for (errorMsg of getControlErrors('text'); track $index) {
+                <span>{{ errorMsg }}</span>
               }
             </div>
           }
@@ -52,7 +49,7 @@
             type="submit"
             [disabled]="postForm.invalid"
           >
-            {{ isEditMode ? 'Сохранить' : 'Добавить' }}
+            {{ saveButtonTitle() }}
           </button>
 
           <button
