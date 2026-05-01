@@ -20,7 +20,24 @@
     ></app-blog-list>
 
     <div class="blog-button">
-      <button>Next →</button>
+      <button type="button" (click)="prevPage()" [disabled]="activePage === 1">
+        ← Prev
+      </button>
+
+      @for (page of pages; track page) {
+        <button
+          type="button"
+          class="blog-page-button"
+          [class.blog-page-button--active]="page === activePage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      }
+
+      <button type="button" (click)="nextPage()" [disabled]="activePage >= totalPages">
+        Next →
+      </button>
     </div>
 
     <app-admin-panel
@@ -30,15 +47,15 @@
 
     <app-blog-post-form
       *ngIf="isFormOpen"
-      [post]="editingPost"
-      [mode]="formMode"
+      [post]="editingPost()"
+      [mode]="formMode()"
       (save)="onSavePost($event)"
       (cancel)="closePostForm()"
     ></app-blog-post-form>
 
     <app-blog-stats-dialog
       *ngIf="isStatsOpen"
-      [postsCount]="posts.length"
+      [postsCount]="totalCount"
       (close)="isStatsOpen = false"
     ></app-blog-stats-dialog>
 
