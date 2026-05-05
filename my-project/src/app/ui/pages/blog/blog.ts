@@ -1,4 +1,5 @@
-import { Component, computed, Inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { BlogList } from '../../components/blog-list/blog-list';
 import { AdminPanel } from '../../components/admin-panel/admin-panel';
@@ -7,7 +8,6 @@ import { BlogStatsDialog } from '../../components/blog-stats-dialog/blog-stats-d
 import { Post, NewPost } from '../../../dto/post';
 import { FormMode } from '../../../dto/form-mode';
 import { ARTICLES_SERVICE } from '../../../services/articles-service.token';
-import { ArticlesServiceInterface } from '../../../services/articles-service.interface';
 import { ArticlesStoreService } from '../../../services/articles-store.service';
 
 @Component({
@@ -16,48 +16,34 @@ import { ArticlesStoreService } from '../../../services/articles-store.service';
   imports: [CommonModule, BlogList, AdminPanel, BlogPostForm, BlogStatsDialog],
   templateUrl: './blog.html',
   styleUrl: './blog.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogPage implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly articlesService = inject(ARTICLES_SERVICE);
+  protected readonly articlesStore = inject(ArticlesStoreService);
+
   protected isFormOpen = false;
   protected editingPost = signal<Post | null>(null);
   protected formMode = computed<FormMode>(() => this.editingPost() ? 'edit' : 'add');
   protected isStatsOpen = false;
-
-  constructor(
-    @Inject(ARTICLES_SERVICE) private readonly articlesService: ArticlesServiceInterface,
-    protected readonly articlesStore: ArticlesStoreService,
-  ) {}
-
-  protected get posts(): Post[] {
-    return this.articlesStore.posts;
-  }
-
-  protected get activePage(): number {
-    return this.articlesStore.activePage;
-  }
-
-  protected get totalCount(): number {
-    return this.articlesStore.totalCount;
-  }
-
-  protected get totalPages(): number {
-    if (this.totalCount === 0) {
-      return 1;
-    }
-
-    return Math.ceil(this.totalCount / 7);
-  }
-
-  protected get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
-  }
+  protected readonly posts = this.articlesStore.posts;
+  protected readonly activePage = this.articlesStore.activePage;
+  protected readonly totalCount = this.articlesStore.totalCount;
+  protected readonly totalPages = computed(() => {
+    const totalCount = this.totalCount();
+    return totalCount === 0 ? 1 : Math.ceil(totalCount / 7);
+  });
+  protected readonly pages = computed(() =>
+    Array.from({ length: this.totalPages() }, (_, index) => index + 1),
+  );
 
   public ngOnInit(): void {
-    if (this.articlesStore.posts.length > 0 && this.articlesStore.totalCount > 0) {
+    if (this.posts().length > 0 && this.totalCount() > 0) {
       return;
     }
 
-    this.loadPage(this.articlesStore.activePage);
+    this.loadPage(this.articlesService.getStoredActivePage());
   }
 
   protected openCreateForm(): void {
@@ -77,25 +63,34 @@ export class BlogPage implements OnInit {
 
   protected onSavePost(postData: NewPost): void {
     const editingPost = this.editingPost();
-    const currentPage = this.activePage;
+    const currentPage = this.activePage();
 
     if (this.formMode() === 'edit' && editingPost) {
-      this.articlesService.updatePost(editingPost.id, postData, currentPage).subscribe((result) => {
-        this.syncStore(result.posts, result.activePage, result.totalCount);
-      });
+      this.articlesService
+        .updatePost(editingPost.id, postData, currentPage)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((result) => {
+          this.syncStore(result.posts, result.activePage, result.totalCount);
+        });
     } else {
-      this.articlesService.addPost(postData, currentPage).subscribe((result) => {
-        this.syncStore(result.posts, result.activePage, result.totalCount);
-      });
+      this.articlesService
+        .addPost(postData, currentPage)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((result) => {
+          this.syncStore(result.posts, result.activePage, result.totalCount);
+        });
     }
 
     this.closePostForm();
   }
 
   protected onDeletePost(id: number): void {
-    this.articlesService.deletePost(id, this.activePage).subscribe((result) => {
-      this.syncStore(result.posts, result.activePage, result.totalCount);
-    });
+    this.articlesService
+      .deletePost(id, this.activePage())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this.syncStore(result.posts, result.activePage, result.totalCount);
+      });
 
     const editingPost = this.editingPost();
     if (editingPost?.id === id) {
@@ -104,7 +99,7 @@ export class BlogPage implements OnInit {
   }
 
   protected goToPage(page: number): void {
-    if (page === this.activePage) {
+    if (page === this.activePage()) {
       return;
     }
 
@@ -112,25 +107,28 @@ export class BlogPage implements OnInit {
   }
 
   protected nextPage(): void {
-    if (this.activePage >= this.totalPages) {
+    if (this.activePage() >= this.totalPages()) {
       return;
     }
 
-    this.loadPage(this.activePage + 1);
+    this.loadPage(this.activePage() + 1);
   }
 
   protected prevPage(): void {
-    if (this.activePage <= 1) {
+    if (this.activePage() <= 1) {
       return;
     }
 
-    this.loadPage(this.activePage - 1);
+    this.loadPage(this.activePage() - 1);
   }
 
   private loadPage(page: number): void {
-    this.articlesService.getPosts(page).subscribe((result) => {
-      this.syncStore(result.posts, result.activePage, result.totalCount);
-    });
+    this.articlesService
+      .getPosts(page)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this.syncStore(result.posts, result.activePage, result.totalCount);
+      });
   }
 
   private syncStore(posts: Post[], page: number, totalCount: number): void {

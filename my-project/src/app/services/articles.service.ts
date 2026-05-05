@@ -1,28 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Post, NewPost } from '../dto/post';
-import { ArticlesPageResult, ArticlesServiceInterface } from './articles-service.interface';
+import { ArticlesServiceInterface } from './articles-service.interface';
+import { ArticlesPageResult } from './types/articles-page-result';
 
 const POSTS_KEY = 'posts';
+const ACTIVE_PAGE_KEY = 'activePage';
 const PAGE_SIZE = 7;
 const DEFAULT_POSTS: Post[] = [
   { id: 1, title: 'Первая статья Первая статья', text: 'Текст 1' },
   { id: 2, title: 'Вторая статья Вторая статья', text: 'Текст 2' },
 ];
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ArticlesService implements ArticlesServiceInterface {
   public getPosts(page: number): Observable<ArticlesPageResult> {
     const normalizedPage = this.normalizePage(page);
     const posts = this.getAllPosts();
+    const result = this.buildPageResult(posts, normalizedPage);
+    this.saveActivePage(result.activePage);
 
-    return of(this.buildPageResult(posts, normalizedPage));
+    return of(result);
   }
 
   public getTotalCount(): Observable<number> {
     return of(this.getAllPosts().length);
+  }
+
+  public getStoredActivePage(): number {
+    const page = Number(localStorage.getItem(ACTIVE_PAGE_KEY) ?? '1');
+    return this.normalizePage(page);
   }
 
   public addPost(post: NewPost, page: number): Observable<ArticlesPageResult> {
@@ -36,7 +43,9 @@ export class ArticlesService implements ArticlesServiceInterface {
     const updatedPosts = [newPost, ...posts];
     this.savePosts(updatedPosts);
 
-    return of(this.buildPageResult(updatedPosts, this.normalizePage(page)));
+    const result = this.buildPageResult(updatedPosts, this.normalizePage(page));
+    this.saveActivePage(result.activePage);
+    return of(result);
   }
 
   public updatePost(id: number, post: NewPost, page: number): Observable<ArticlesPageResult> {
@@ -49,7 +58,9 @@ export class ArticlesService implements ArticlesServiceInterface {
 
     this.savePosts(updatedPosts);
 
-    return of(this.buildPageResult(updatedPosts, this.normalizePage(page)));
+    const result = this.buildPageResult(updatedPosts, this.normalizePage(page));
+    this.saveActivePage(result.activePage);
+    return of(result);
   }
 
   public deletePost(id: number, page: number): Observable<ArticlesPageResult> {
@@ -60,7 +71,9 @@ export class ArticlesService implements ArticlesServiceInterface {
 
     const totalPages = Math.max(1, Math.ceil(updatedPosts.length / PAGE_SIZE));
     const normalizedPage = Math.min(this.normalizePage(page), totalPages);
-    return of(this.buildPageResult(updatedPosts, normalizedPage));
+    const result = this.buildPageResult(updatedPosts, normalizedPage);
+    this.saveActivePage(result.activePage);
+    return of(result);
   }
 
   private getAllPosts(): Post[] {
@@ -81,6 +94,10 @@ export class ArticlesService implements ArticlesServiceInterface {
 
   private savePosts(posts: Post[]): void {
     localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+  }
+
+  private saveActivePage(page: number): void {
+    localStorage.setItem(ACTIVE_PAGE_KEY, String(page));
   }
 
   private buildPageResult(posts: Post[], page: number): ArticlesPageResult {

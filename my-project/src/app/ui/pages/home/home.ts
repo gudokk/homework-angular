@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, Inject, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ARTICLES_SERVICE } from '../../../services/articles-service.token';
 import { ArticlesServiceInterface } from '../../../services/articles-service.interface';
 import { ArticlesStoreService } from '../../../services/articles-store.service';
@@ -24,6 +25,7 @@ import { HomeHobbySection } from '../../components/home-hobby-section/home-hobby
   encapsulation: ViewEncapsulation.None,
 })
 export class HomePage implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   protected latestPosts: Post[] = [];
 
   constructor(
@@ -32,15 +34,18 @@ export class HomePage implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    if (this.articlesStore.posts.length > 0 && this.articlesStore.activePage === 1) {
-      this.latestPosts = this.articlesStore.posts.slice(0, 2);
+    if (this.articlesStore.posts().length > 0 && this.articlesStore.activePage() === 1) {
+      this.latestPosts = this.articlesStore.posts().slice(0, 2);
       return;
     }
 
-    this.articlesService.getPosts(1).subscribe((result) => {
-      this.articlesStore.setPosts(result.posts);
-      this.articlesStore.setTotalCount(result.totalCount);
-      this.latestPosts = result.posts.slice(0, 2);
-    });
+    this.articlesService
+      .getPosts(1)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this.articlesStore.setPosts(result.posts);
+        this.articlesStore.setTotalCount(result.totalCount);
+        this.latestPosts = result.posts.slice(0, 2);
+      });
   }
 }
