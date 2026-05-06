@@ -1,0 +1,1 @@
+import{F as o,L as s,d as n,x as r}from"./chunk-UKN45QJL.js";function x(t){t||(t=o(s));let i=new n(e=>{if(t.destroyed){e.next();return}return t.onDestroy(e.next.bind(e))});return e=>e.pipe(r(i))}export{x as a};
