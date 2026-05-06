@@ -1,5 +1,6 @@
 import { Component, DestroyRef, Inject, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { ARTICLES_SERVICE } from '../../../services/articles-service.token';
 import { ArticlesServiceInterface } from '../../../services/articles-service.interface';
 import { ArticlesStoreService } from '../../../services/articles-store.service';
@@ -26,6 +27,7 @@ import { HomeHobbySection } from '../../components/home-hobby-section/home-hobby
 })
 export class HomePage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly title = inject(Title);
   protected latestPosts: Post[] = [];
 
   constructor(
@@ -34,6 +36,8 @@ export class HomePage implements OnInit {
   ) {}
 
   public ngOnInit(): void {
+    this.title.setTitle('Главная | MyProject');
+
     if (this.articlesStore.posts().length > 0 && this.articlesStore.activePage() === 1) {
       this.latestPosts = this.articlesStore.posts().slice(0, 2);
       return;
