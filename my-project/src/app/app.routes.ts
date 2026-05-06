@@ -10,5 +10,10 @@ export const routes: Routes = [
     path: 'blog',
     loadComponent: () =>
       import('./ui/pages/blog/blog').then(m => m.BlogPage)
+  },
+  {
+    path: 'blog/:id',
+    loadComponent: () =>
+      import('./ui/pages/post-details/post-details').then(m => m.PostDetailsPage)
   }
 ];

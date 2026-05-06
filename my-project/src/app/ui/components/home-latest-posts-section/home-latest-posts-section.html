@@ -1,7 +1,7 @@
 <section class="posts">
   <div class="posts-container">
     @for (post of posts(); track post.id; let index = $index) {
-      <article class="post-card">
+      <article class="post-card" [routerLink]="['/blog', post.id]">
         <div class="post-content" [class.post-content--beige]="index % 2 === 0" [class.post-content--green]="index % 2 === 1">
           <span class="post-category" [class.post-category--orange]="index % 2 === 0" [class.post-category--green]="index % 2 === 1">
             {{ index % 2 === 0 ? 'Product photography' : 'Portrait' }}

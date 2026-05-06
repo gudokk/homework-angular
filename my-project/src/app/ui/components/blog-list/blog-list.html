@@ -1,7 +1,7 @@
 <div class="blog-grid">
 
   @for (post of posts; track post.id) {
-    <article class="blog-card post-item">
+    <article class="blog-card post-item" [routerLink]="['/blog', post.id]">
       <div class="blog-image small"></div>
       <h4>{{ post.title }}</h4>
       <p>{{ post.text }}</p>
@@ -9,16 +9,20 @@
         <button
         type="button"
         class="post-delete-button"
-        (click)="removePost(post.id)"
+        (click)="removePost($event, post.id)"
+        mat-icon-button
+        aria-label="Удалить статью"
         >
-        ×
+        <mat-icon>delete</mat-icon>
         </button>
         <button
         type="button"
         class="post-edit-button"
-        (click)="onEditPost(post)"
+        (click)="onEditPost($event, post)"
+        mat-icon-button
+        aria-label="Редактировать статью"
         >
-        <img src="assets/edit.png" alt="Редактировать">
+        <mat-icon>edit</mat-icon>
         </button>
     </article>
   } @empty {

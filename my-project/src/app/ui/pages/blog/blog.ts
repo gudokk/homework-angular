@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { BlogList } from '../../components/blog-list/blog-list';
 import { AdminPanel } from '../../components/admin-panel/admin-panel';
 import { BlogPostForm } from '../../components/blog-post-form/blog-post-form';
@@ -20,6 +21,7 @@ import { ArticlesStoreService } from '../../../services/articles-store.service';
 })
 export class BlogPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly title = inject(Title);
   private readonly articlesService = inject(ARTICLES_SERVICE);
   protected readonly articlesStore = inject(ArticlesStoreService);
 
@@ -39,6 +41,8 @@ export class BlogPage implements OnInit {
   );
 
   public ngOnInit(): void {
+    this.title.setTitle('Блог | MyProject');
+
     if (this.posts().length > 0 && this.totalCount() > 0) {
       return;
     }

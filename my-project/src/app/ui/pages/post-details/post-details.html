@@ -1,0 +1,84 @@
+<section class="post-details">
+  <div class="post-details-container">
+    <a routerLink="/blog" class="post-back-link">← Вернуться в блог</a>
+
+    @if (hasPost()) {
+      <mat-card class="post-card">
+        <div class="post-card-content">
+          <div class="post-image-placeholder"></div>
+
+          <div class="post-info">
+            <h2>{{ post()?.title }}</h2>
+            <p class="post-text">{{ post()?.text }}</p>
+  
+            <div class="rating-box rating-box--article">
+              <span>Рейтинг: {{ articleRating() }}</span>
+              <button mat-icon-button (click)="changeArticleRating(1)">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button mat-icon-button (click)="changeArticleRating(-1)">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+
+      <section class="comments-section">
+        <h3>Комментарии</h3>
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <mat-card class="comment-card">
+              <div class="comment-header">
+                <strong>{{ comment.author }}</strong>
+                <span>{{ comment.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+              </div>
+
+              <p>{{ comment.text }}</p>
+
+              <div class="rating-box rating-box--comment">
+                <span>Рейтинг: {{ comment.rating }}</span>
+                <button mat-icon-button (click)="changeCommentRating(comment.id, 1)">
+                  <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button (click)="changeCommentRating(comment.id, -1)">
+                  <mat-icon>remove</mat-icon>
+                </button>
+              </div>
+            </mat-card>
+          } @empty {
+            <p class="empty-comments">Комментариев еще нет.</p>
+          }
+        </div>
+
+        <form class="comment-form" (submit)="onCommentFormSubmit($event)">
+          <h3>Напишите комментарий</h3>
+          <mat-form-field appearance="outline">
+            <mat-label>Имя</mat-label>
+            <input matInput
+              [value]="commentAuthor()"
+              (input)="setCommentAuthor($any($event.target).value)">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Комментарий</mat-label>
+            <textarea matInput
+              rows="4"
+              [value]="commentText()"
+              (input)="setCommentText($any($event.target).value)">
+            </textarea>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="isCommentFormInvalid()">
+            Отправить
+          </button>
+        </form>
+
+      </section>
+    } @else {
+      <div class="post-not-found">Пост не найден.</div>
+    }
+  </div>
+</section>
