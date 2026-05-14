@@ -25,6 +25,31 @@
           }
         </div>
 
+        <div class="blog-form-group blog-form-group--material">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Категория</mat-label>
+            <input
+              matInput
+              formControlName="categoryName"
+              [matAutocomplete]="autoCat"
+              [class.blog-form-field--invalid]="hasError('categoryName')"
+            >
+            <mat-autocomplete #autoCat="matAutocomplete">
+              @for (opt of filteredCategoryOptions(); track opt) {
+                <mat-option [value]="opt">{{ opt }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+
+          @if (hasError('categoryName')) {
+            <div class="blog-form-error">
+              @for (errorMsg of getControlErrors('categoryName'); track $index) {
+                <span>{{ errorMsg }}</span>
+              }
+            </div>
+          }
+        </div>
+
         <div class="blog-form-group">
           <label>
             Текст
@@ -39,6 +64,18 @@
               @for (errorMsg of getControlErrors('text'); track $index) {
                 <span>{{ errorMsg }}</span>
               }
+            </div>
+          }
+        </div>
+
+        <div class="blog-form-group">
+          <label class="blog-form-file-label">
+            Изображение
+            <input type="file" accept="image/*" (change)="onImageSelected($event)">
+          </label>
+          @if (currentImageSrc(); as src) {
+            <div class="blog-form-image-preview">
+              <img [src]="src" alt="Превью изображения статьи">
             </div>
           }
         </div>

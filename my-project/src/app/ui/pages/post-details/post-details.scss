@@ -34,6 +34,20 @@
   border-radius: var(--radius);
   background: #d9d9df;
   flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-image-placeholder--empty {
+  background: #d9d9df;
 }
 
 .post-info {

@@ -5,7 +5,14 @@
     @if (hasPost()) {
       <mat-card class="post-card">
         <div class="post-card-content">
-          <div class="post-image-placeholder"></div>
+          <div
+            class="post-image-placeholder"
+            [class.post-image-placeholder--empty]="!post()?.imageUrl"
+          >
+            @if (post()?.imageUrl; as src) {
+              <img [src]="src" alt="">
+            }
+          </div>
 
           <div class="post-info">
             <h2>{{ post()?.title }}</h2>
