@@ -1,0 +1,1 @@
+import{S as a,la as e}from"./chunk-OXUCV4BC.js";var i=class o{posts=e([]);activePage=e(1);totalCount=e(0);setPosts(t){this.posts.set(t)}setActivePage(t){this.activePage.set(t)}setTotalCount(t){this.totalCount.set(t)}static \u0275fac=function(s){return new(s||o)};static \u0275prov=a({token:o,factory:o.\u0275fac,providedIn:"root"})};export{i as a};
