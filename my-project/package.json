@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "ng deploy"
@@ -24,6 +24,7 @@
   "private": true,
   "packageManager": "npm@11.6.2",
   "dependencies": {
+    "@angular/animations": "21.2.7",
     "@angular/cdk": "^21.2.9",
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",

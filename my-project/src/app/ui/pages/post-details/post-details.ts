@@ -4,15 +4,22 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { NewComment } from '../../../dto/comment';
-import { PostDetailsService } from '../../../services/post-details.service';
 import { PostDetailsStoreService } from '../../../services/post-details-store.service';
 import { POST_DETAILS_SERVICE } from '../../../services/post-details-service.token';
 import { PostDetailsServiceInterface } from '../../../services/post-details-service.interface';
-import { MatCardModule } from '@angular/material/card'; 
+import { PostDetailsApiService } from '../../../services/post-details-api.service';
+import { PostDetailsLocalStorageService } from '../../../services/post-details-local-storage.service';
+import { environment } from '../../../../environments/environment';
+import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+
+const postDetailsServiceClass =
+  environment.articlesSource === 'api'
+    ? PostDetailsApiService
+    : PostDetailsLocalStorageService;
 
 @Component({
   selector: 'app-post-details-page',
@@ -25,7 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     PostDetailsStoreService,
     {
       provide: POST_DETAILS_SERVICE,
-      useClass: PostDetailsService,
+      useClass: postDetailsServiceClass,
     },
   ],
 })
@@ -52,22 +59,20 @@ export class PostDetailsPage implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.route.paramMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        const id = Number(params.get('id'));
-        if (!Number.isFinite(id) || id < 1) {
-          this.title.setTitle('Пост не найден | MyProject');
-          this.detailsStore.setData({
-            post: null,
-            comments: [],
-            articleRating: 0,
-          });
-          return;
-        }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id')?.trim() ?? '';
+      if (!id) {
+        this.title.setTitle('Пост не найден | MyProject');
+        this.detailsStore.setData({
+          post: null,
+          comments: [],
+          articleRating: 0,
+        });
+        return;
+      }
 
-        this.loadPostDetails(Math.floor(id));
-      });
+      this.loadPostDetails(id);
+    });
   }
 
   protected setCommentAuthor(author: string): void {
@@ -122,7 +127,7 @@ export class PostDetailsPage implements OnInit {
       });
   }
 
-  protected changeCommentRating(commentId: number, delta: number): void {
+  protected changeCommentRating(commentId: string, delta: number): void {
     const post = this.post();
     if (!post) {
       return;
@@ -136,7 +141,7 @@ export class PostDetailsPage implements OnInit {
       });
   }
 
-  private loadPostDetails(postId: number): void {
+  private loadPostDetails(postId: string): void {
     this.postDetailsService
       .getPostDetails(postId)
       .pipe(takeUntilDestroyed(this.destroyRef))

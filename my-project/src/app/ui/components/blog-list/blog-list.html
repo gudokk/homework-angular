@@ -2,7 +2,14 @@
 
   @for (post of posts; track post.id) {
     <article class="blog-card post-item" [routerLink]="['/blog', post.id]">
-      <div class="blog-image small"></div>
+      <div
+        class="blog-image small"
+        [class.blog-image--empty]="!post.imageUrl"
+      >
+        @if (post.imageUrl) {
+          <img [src]="post.imageUrl" alt="">
+        }
+      </div>
       <h4>{{ post.title }}</h4>
       <p>{{ post.text }}</p>
 

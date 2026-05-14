@@ -14,10 +14,10 @@ import { Post } from '../../../dto/post';
 export class BlogList {
   @Input() posts: Post[] = [];
 
-  @Output() deletePost = new EventEmitter<number>();
+  @Output() deletePost = new EventEmitter<string>();
   @Output() editPost = new EventEmitter<Post>();
 
-  protected removePost(event: Event, id: number):void {
+  protected removePost(event: Event, id: string): void {
     event.preventDefault();
     event.stopPropagation();
     this.deletePost.emit(id);

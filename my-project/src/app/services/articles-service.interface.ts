@@ -7,6 +7,8 @@ export interface ArticlesServiceInterface {
   getTotalCount(): Observable<number>;
   getStoredActivePage(): number;
   addPost(post: NewPost, page: number): Observable<ArticlesPageResult>;
-  updatePost(id: number, post: NewPost, page: number): Observable<ArticlesPageResult>;
-  deletePost(id: number, page: number): Observable<ArticlesPageResult>;
+  updatePost(id: string, post: NewPost, page: number): Observable<ArticlesPageResult>;
+  deletePost(id: string, page: number): Observable<ArticlesPageResult>;
+  /** Подсказки для автокомплита категорий (localStorage — из статей; API — пусто, список с бэкенда отдельно) */
+  getCategorySuggestions(): string[];
 }

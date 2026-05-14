@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { BlogList } from '../../components/blog-list/blog-list';
@@ -10,6 +11,8 @@ import { Post, NewPost } from '../../../dto/post';
 import { FormMode } from '../../../dto/form-mode';
 import { ARTICLES_SERVICE } from '../../../services/articles-service.token';
 import { ArticlesStoreService } from '../../../services/articles-store.service';
+import { CategoriesApiService } from '../../../services/categories-api.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-blog',
@@ -23,8 +26,10 @@ export class BlogPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly title = inject(Title);
   private readonly articlesService = inject(ARTICLES_SERVICE);
+  private readonly categoriesApi = inject(CategoriesApiService);
   protected readonly articlesStore = inject(ArticlesStoreService);
 
+  protected categoryOptions = signal<string[]>([]);
   protected isFormOpen = false;
   protected editingPost = signal<Post | null>(null);
   protected formMode = computed<FormMode>(() => this.editingPost() ? 'edit' : 'add');
@@ -43,6 +48,8 @@ export class BlogPage implements OnInit {
   public ngOnInit(): void {
     this.title.setTitle('Блог | MyProject');
 
+    this.refreshCategoryOptions();
+
     if (this.posts().length > 0 && this.totalCount() > 0) {
       return;
     }
@@ -51,11 +58,13 @@ export class BlogPage implements OnInit {
   }
 
   protected openCreateForm(): void {
+    this.refreshCategoryOptions();
     this.editingPost.set(null);
     this.isFormOpen = true;
   }
 
   protected openEditForm(post: Post): void {
+    this.refreshCategoryOptions();
     this.editingPost.set(post);
     this.isFormOpen = true;
   }
@@ -88,7 +97,7 @@ export class BlogPage implements OnInit {
     this.closePostForm();
   }
 
-  protected onDeletePost(id: number): void {
+  protected onDeletePost(id: string): void {
     this.articlesService
       .deletePost(id, this.activePage())
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -139,5 +148,20 @@ export class BlogPage implements OnInit {
     this.articlesStore.setPosts(posts);
     this.articlesStore.setActivePage(page);
     this.articlesStore.setTotalCount(totalCount);
+    this.refreshCategoryOptions();
+  }
+
+  private refreshCategoryOptions(): void {
+    if (environment.articlesSource === 'api') {
+      this.categoriesApi
+        .getAll()
+        .pipe(take(1))
+        .subscribe((list) => {
+          this.categoryOptions.set(this.categoriesApi.getNames(list));
+        });
+      return;
+    }
+
+    this.categoryOptions.set(this.articlesService.getCategorySuggestions());
   }
 }

@@ -4,13 +4,17 @@
       <article class="post-card" [routerLink]="['/blog', post.id]">
         <div class="post-content" [class.post-content--beige]="index % 2 === 0" [class.post-content--green]="index % 2 === 1">
           <span class="post-category" [class.post-category--orange]="index % 2 === 0" [class.post-category--green]="index % 2 === 1">
-            {{ index % 2 === 0 ? 'Product photography' : 'Portrait' }}
+            {{ post.categoryName || 'Без категории' }}
           </span>
           <h3>{{ post.title }}</h3>
           <p>{{ post.text }}</p>
         </div>
 
-        <div class="post-image"></div>
+        <div class="post-image">
+          @if (post.imageUrl) {
+            <img [src]="post.imageUrl" alt="">
+          }
+        </div>
       </article>
     }
 

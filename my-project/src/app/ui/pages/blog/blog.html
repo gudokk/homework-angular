@@ -49,6 +49,7 @@
       *ngIf="isFormOpen"
       [post]="editingPost()"
       [mode]="formMode()"
+      [categoryOptions]="categoryOptions()"
       (save)="onSavePost($event)"
       (cancel)="closePostForm()"
     ></app-blog-post-form>
